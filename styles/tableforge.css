@@ -1,0 +1,87 @@
+/* TableForge — Foundry module styles. Donor palette: deep brown + gold. */
+.tableforge-app .window-content { padding: 0; background: #17110c; color: #e8dcc0; }
+.tableforge-app .tf-root { display: flex; flex-direction: column; height: 100%; font-family: Georgia, "Times New Roman", serif; }
+.tableforge-app .tf-scroll { overflow-y: auto; padding: 10px 12px 16px; }
+
+.tableforge-app .tf-tabs { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding: 8px 10px; background: #100b07; border-bottom: 1px solid #3a2c1c; }
+.tableforge-app .tf-tab { background: transparent; border: 1px solid transparent; color: #b8a67f; border-radius: 6px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+.tableforge-app .tf-tab.active { background: #2a2018; border-color: #d4a84b; color: #f0d492; }
+.tableforge-app .tf-ai-badge { margin-left: auto; font-size: 11px; color: #8d7c58; border: 1px solid #3a2c1c; border-radius: 999px; padding: 2px 8px; }
+.tableforge-app .tf-ai-badge.on { color: #9fd48a; border-color: #4a6b35; }
+
+.tableforge-app .tf-pane h3 { color: #f0d492; border: none; margin: 12px 0 6px; font-size: 15px; }
+.tableforge-app .tf-row { display: flex; gap: 8px; align-items: end; margin: 8px 0; }
+.tableforge-app .tf-wrap { flex-wrap: wrap; align-items: center; }
+.tableforge-app .tf-grow { flex: 1 1 auto; }
+.tableforge-app .tf-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tableforge-app .tf-dim { color: #9b8a67; font-size: 12px; }
+.tableforge-app .tf-empty { color: #9b8a67; font-style: italic; margin: 16px 4px; }
+.tableforge-app label { display: block; font-size: 12px; color: #c9b98d; }
+.tableforge-app input[type="text"], .tableforge-app input[type="number"], .tableforge-app select, .tableforge-app textarea {
+  width: 100%; background: #241a10; color: #e8dcc0; border: 1px solid #4a3823; border-radius: 6px;
+  padding: 5px 7px; font: inherit; font-size: 13px; margin-top: 3px;
+}
+.tableforge-app textarea { resize: vertical; }
+.tableforge-app .tf-check { display: flex; align-items: center; gap: 5px; }
+.tableforge-app .tf-check input { width: auto; margin: 0; }
+
+.tableforge-app .tf-btn { background: #2a2018; border: 1px solid #8a6d3b; color: #e8dcc0; border-radius: 6px; padding: 6px 12px; cursor: pointer; font: inherit; font-size: 13px; white-space: nowrap; }
+.tableforge-app .tf-btn:hover { border-color: #d4a84b; }
+.tableforge-app .tf-btn.primary { background: #6d521f; border-color: #d4a84b; color: #fff3d6; }
+.tableforge-app .tf-btn.danger { border-color: #7a3b2e; color: #e8a08d; }
+.tableforge-app .tf-btn.sm { padding: 3px 9px; font-size: 12px; }
+.tableforge-app .tf-btn.on { background: #4a6b35; border-color: #7ba05b; }
+.tableforge-app .tf-btn:disabled { opacity: 0.55; cursor: wait; }
+.tableforge-app .tf-icon { background: transparent; border: none; color: #b8a67f; cursor: pointer; padding: 3px 6px; font-size: 13px; }
+.tableforge-app .tf-icon.on { color: #f0d492; }
+.tableforge-app .tf-icon:hover { color: #f0d492; }
+
+.tableforge-app .tf-chip { background: #241a10; border: 1px solid #4a3823; color: #c9b98d; border-radius: 999px; padding: 5px 12px; cursor: pointer; font: inherit; font-size: 13px; }
+.tableforge-app .tf-chip.sm { padding: 3px 9px; font-size: 12px; }
+.tableforge-app .tf-chip.on { background: #6d521f; border-color: #d4a84b; color: #fff3d6; }
+.tableforge-app .tf-seg { display: inline-flex; gap: 3px; margin-top: 3px; }
+.tableforge-app .tf-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; border: 1px solid rgba(0,0,0,0.5); vertical-align: -1px; }
+
+.tableforge-app .tf-details { border: 1px solid #3a2c1c; border-radius: 8px; padding: 8px 10px; margin: 10px 0; background: #1d150e; }
+.tableforge-app .tf-details summary { cursor: pointer; color: #f0d492; font-size: 13px; }
+
+.tableforge-app .tf-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin-top: 10px; }
+.tableforge-app .tf-card { background: #241a10; border: 1px solid #4a3823; border-radius: 8px; padding: 10px 12px; margin: 8px 0; }
+.tableforge-app .tf-cards .tf-card { margin: 0; }
+.tableforge-app .tf-card.pinned { border-color: #d4a84b; box-shadow: 0 0 0 1px #d4a84b inset; }
+.tableforge-app .tf-card.used { opacity: 0.62; }
+.tableforge-app .tf-card header { display: flex; justify-content: space-between; align-items: start; gap: 6px; }
+.tableforge-app .tf-card h3, .tableforge-app .tf-card h4 { margin: 0 0 6px; color: #f5e9c8; font-size: 15px; border: none; }
+.tableforge-app .tf-card-body { white-space: pre-wrap; font-size: 13px; line-height: 1.45; color: #ded0ab; }
+.tableforge-app .tf-card footer { margin-top: 8px; }
+.tableforge-app .tf-tags { margin-top: 6px; }
+.tableforge-app .tf-pill { display: inline-block; background: #17110c; border: 1px solid #4a3823; color: #c9b98d; border-radius: 999px; padding: 1px 8px; font-size: 11px; margin: 0 4px 4px 0; }
+.tableforge-app .tf-saved { color: #9fd48a; font-size: 12px; }
+
+.tableforge-app .tf-split { display: grid; grid-template-columns: 240px 1fr; gap: 14px; align-items: start; }
+.tableforge-app .tf-side { border-right: 1px solid #3a2c1c; padding-right: 12px; }
+.tableforge-app .tf-side label { margin: 6px 0; }
+.tableforge-app .tf-list-item { display: block; width: 100%; text-align: left; background: transparent; border: 1px solid transparent; color: #d8c9a3; border-radius: 6px; padding: 5px 8px; cursor: pointer; font: inherit; font-size: 13px; margin-bottom: 2px; }
+.tableforge-app .tf-list-item.active { background: #2a2018; border-color: #d4a84b; color: #f0d492; }
+.tableforge-app .tf-lastroll { background: #1d2a14; border: 1px solid #4a6b35; border-radius: 6px; padding: 6px 10px; }
+.tableforge-app .tf-entries { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 13px; }
+.tableforge-app .tf-entries td { border-bottom: 1px solid #2c2115; padding: 4px 6px; vertical-align: top; }
+.tableforge-app .tf-range { color: #f0d492; white-space: nowrap; width: 56px; }
+.tableforge-app .tf-log { list-style: none; margin: 6px 0; padding: 0; font-size: 13px; }
+.tableforge-app .tf-log li { padding: 3px 0; border-bottom: 1px solid #241a10; }
+
+.tableforge-app .tf-act { color: #f0d492; margin-top: 16px; }
+.tableforge-app .tf-beat { display: flex; gap: 8px; background: #241a10; border: 1px solid #4a3823; border-radius: 8px; padding: 8px 10px; margin: 6px 0; align-items: start; }
+.tableforge-app .tf-beat-main { flex: 1; }
+.tableforge-app .tf-beat select { width: auto; display: inline-block; margin-left: 8px; padding: 2px 5px; }
+.tableforge-app .tf-beat .tf-card-body { margin-top: 4px; }
+.tableforge-app .tf-pending { border: 1px dashed #d4a84b; border-radius: 8px; padding: 10px; margin: 10px 0; background: #1d150e; }
+.tableforge-app .tf-pending header { display: flex; justify-content: space-between; align-items: center; }
+
+.tableforge-app .tf-board { background: #1d150e; border: 1px solid #3a2c1c; border-radius: 8px; overflow: hidden; }
+.tableforge-app .tf-board svg { display: block; width: 100%; height: auto; }
+.tableforge-app .tf-feature-card { border: 1px solid #d4a84b; border-radius: 8px; padding: 8px 10px; margin: 8px 0; background: #241a10; }
+
+.tableforge-app .tf-holder { margin-bottom: 14px; }
+.tableforge-app .tf-loot-row { display: flex; gap: 8px; align-items: center; background: #241a10; border: 1px solid #3a2c1c; border-radius: 6px; padding: 6px 8px; margin: 4px 0; }
+.tableforge-app .tf-loot-row select { width: auto; margin: 0; }

@@ -1,0 +1,396 @@
+<div class="tf-root">
+  <nav class="tf-tabs">
+    {{#each tabs}}
+    <button type="button" class="tf-tab {{#if active}}active{{/if}}" data-action="tab" data-tab="{{key}}">
+      <i class="{{icon}}"></i> {{label}}
+    </button>
+    {{/each}}
+    <span class="tf-ai-badge {{#if aiReady}}on{{/if}}">{{#if aiReady}}AI connected{{else}}Offline mode{{/if}}</span>
+  </nav>
+
+  <div class="tf-scroll">
+  {{#if is_forge}}
+  <section class="tf-pane">
+    <div class="tf-row tf-wrap">
+      {{#each forgeTypes}}
+      <button type="button" class="tf-chip {{#if active}}on{{/if}}" data-action="forgeType" data-type="{{key}}">{{label}}</button>
+      {{/each}}
+    </div>
+
+    <div class="tf-row">
+      <label class="tf-grow">Steer it
+        <input id="tf-steer" type="text" value="{{steer}}" placeholder="Say what you're after — a name, a place, a twist…">
+      </label>
+      <label>Count
+        <span class="tf-seg">
+          {{#each counts}}<button type="button" class="tf-chip sm {{#if active}}on{{/if}}" data-action="forgeCount" data-count="{{n}}">{{n}}</button>{{/each}}
+        </span>
+      </label>
+      <button type="button" class="tf-btn primary" data-action="generate" {{#if busy}}disabled{{/if}}>
+        {{#if busy}}Forging…{{else}}Generate{{/if}}
+      </button>
+    </div>
+
+    <div class="tf-row tf-wrap">
+      {{#each vibes}}
+      <button type="button" class="tf-chip sm {{#if on}}on{{/if}}" data-action="vibe" data-vibe="{{name}}">{{name}}</button>
+      {{/each}}
+    </div>
+
+    <details class="tf-details">
+      <summary>Flesh out an idea you already have</summary>
+      <div class="tf-row">
+        <label class="tf-grow">Name (kept exactly)<input id="tf-flesh-name" type="text" placeholder="e.g. Maren Copperkettle"></label>
+        <label>Versions
+          <select id="tf-flesh-versions"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+        </label>
+        <button type="button" class="tf-btn" data-action="fleshOut" {{#if busy}}disabled{{/if}}>Flesh out</button>
+      </div>
+      <textarea id="tf-flesh-notes" rows="2" placeholder="What you already know — facts the result must keep."></textarea>
+    </details>
+
+    {{#if hasCards}}
+    <div class="tf-cards">
+      {{#each cards}}
+      <article class="tf-card {{#if pinned}}pinned{{/if}}">
+        <header>
+          <h3>{{title}}</h3>
+          <span class="tf-card-actions">
+            <button type="button" class="tf-icon {{#if pinned}}on{{/if}}" data-action="pinCard" data-key="{{key}}" title="Pin — keep this one when regenerating"><i class="fas fa-thumbtack"></i></button>
+            <button type="button" class="tf-icon" data-action="rerollCard" data-key="{{key}}" title="Reroll just this one"><i class="fas fa-dice"></i></button>
+          </span>
+        </header>
+        <div class="tf-card-body">{{body}}</div>
+        {{#if tagList}}<div class="tf-tags">{{#each tagList}}<span class="tf-pill">#{{this}}</span>{{/each}}</div>{{/if}}
+        <footer>
+          {{#if savedName}}
+          <span class="tf-saved"><i class="fas fa-check"></i> Saved as “{{savedName}}”</span>
+          {{else}}
+          <button type="button" class="tf-btn sm" data-action="saveCard" data-key="{{key}}">Save to world</button>
+          {{/if}}
+        </footer>
+      </article>
+      {{/each}}
+    </div>
+    {{else}}
+    <p class="tf-empty">Pick a type, steer it if you like, and hit Generate. Pin the keepers — regenerating replaces only the unpinned cards. Saving a card creates it in the world (GM-only) and files it in the Ideas bank.</p>
+    {{/if}}
+  </section>
+  {{/if}}
+
+  {{#if is_tables}}
+  <section class="tf-pane">
+    <div class="tf-split">
+      <aside class="tf-side">
+        <h3>Your tables</h3>
+        {{#each tables}}
+        <button type="button" class="tf-list-item {{#if active}}active{{/if}}" data-action="tableSelect" data-id="{{id}}">
+          {{name}} <span class="tf-dim">d{{sides}} · {{count}}</span>
+        </button>
+        {{else}}
+        <p class="tf-dim">No tables yet.</p>
+        {{/each}}
+        <h3>New table</h3>
+        <label>Name<input id="tf-tbl-name" type="text" placeholder="e.g. Tavern rumors"></label>
+        <label>Die
+          <select id="tf-tbl-sides">{{#each dice}}<option value="{{this}}">d{{this}}</option>{{/each}}</select>
+        </label>
+        <label>Entries to draft<input id="tf-tbl-count" type="number" min="1" max="100" value="20"></label>
+        <label>What it's for<input id="tf-tbl-desc" type="text" placeholder="Optional — guides generation"></label>
+        <label class="tf-check"><input id="tf-tbl-prefill" type="checkbox" checked> Draft entries for me</label>
+        <button type="button" class="tf-btn primary" data-action="tableNew">Create table</button>
+
+        <h3>Dice tray</h3>
+        <div class="tf-row tf-wrap">
+          {{#each dice}}<button type="button" class="tf-chip" data-action="tray" data-sides="{{this}}">d{{this}}</button>{{/each}}
+        </div>
+        <p class="tf-dim">Tray and table rolls are whispered to GMs in chat.</p>
+      </aside>
+
+      <div class="tf-main">
+        {{#if selTable}}
+        <h3>{{selTable.name}} <span class="tf-dim">d{{selTable.sides}}</span></h3>
+        {{#if lastRoll}}
+        <p class="tf-lastroll">Last roll: <strong>{{lastRoll.roll}}</strong>{{#if lastRoll.text}} — {{lastRoll.text}}{{/if}}</p>
+        {{/if}}
+        <div class="tf-row">
+          <button type="button" class="tf-btn primary" data-action="tableRoll"><i class="fas fa-dice"></i> Roll</button>
+          <button type="button" class="tf-btn" data-action="tableExport">Create native RollTable</button>
+          <button type="button" class="tf-btn danger" data-action="tableDelete">Delete table</button>
+        </div>
+        <table class="tf-entries">
+          <tbody>
+            {{#each selTable.entriesView}}<tr><td class="tf-range">{{label}}</td><td>{{text}}</td></tr>{{/each}}
+          </tbody>
+        </table>
+        <label>Entries — one per line (ranges are re-split evenly on save)
+          <textarea id="tf-tbl-entries" rows="10">{{selTable.entriesText}}</textarea>
+        </label>
+        <div class="tf-row">
+          <button type="button" class="tf-btn" data-action="tableGenEntries">Generate entries</button>
+          <button type="button" class="tf-btn primary" data-action="tableSaveEntries">Save entries</button>
+        </div>
+        {{else}}
+        <p class="tf-empty">Create a table to start rolling. Entries are stored with even roll ranges, just like the TableForge app.</p>
+        {{/if}}
+
+        {{#if rollLog}}
+        <h3>Roll log</h3>
+        <ul class="tf-log">
+          {{#each rollLog}}<li><strong>{{table}}</strong> d{{sides}} → {{roll}}{{#if text}} — {{text}}{{/if}}</li>{{/each}}
+        </ul>
+        {{/if}}
+      </div>
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if is_story}}
+  <section class="tf-pane">
+    <details class="tf-details" open>
+      <summary>Campaign — the context every generation uses</summary>
+      <div class="tf-grid2">
+        <label>Name<input id="tf-camp-name" type="text" value="{{campaign.name}}"></label>
+        <label>Tone<input id="tf-camp-tone" type="text" value="{{campaign.tone}}"></label>
+      </div>
+      <label>Premise / overall plot<textarea id="tf-camp-premise" rows="2">{{campaign.premise}}</textarea></label>
+      <label>Setting<textarea id="tf-camp-setting" rows="2">{{campaign.setting}}</textarea></label>
+      <button type="button" class="tf-btn" data-action="campaignSave">Save campaign</button>
+    </details>
+
+    <div class="tf-row">
+      <label class="tf-grow">Steer suggestions<input id="tf-story-steer" type="text" placeholder="Optional — e.g. pay off the lighthouse thread"></label>
+      <button type="button" class="tf-btn primary" data-action="beatSuggest">Suggest next beats</button>
+    </div>
+
+    {{#if pending}}
+    <div class="tf-pending">
+      <header><h3>{{#if pending.isNext}}Suggested next beats{{else}}Bridging beats{{/if}}</h3>
+      <button type="button" class="tf-btn sm" data-action="pendingDismiss">Dismiss</button></header>
+      {{#each pending.cards}}
+      <article class="tf-card">
+        <h4>{{title}}</h4>
+        <div class="tf-card-body">{{body}}</div>
+        <button type="button" class="tf-btn sm" data-action="pendingAdd" data-key="{{key}}">Add to outline</button>
+      </article>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#each groups}}
+    <h3 class="tf-act">{{actLabel}}</h3>
+    {{#each beats}}
+    <div class="tf-beat">
+      <div class="tf-beat-main">
+        <strong>{{title}}</strong>
+        <select data-beat-status="{{id}}">
+          {{#each statuses}}<option value="{{k}}" {{#if sel}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+        {{#if summary}}<div class="tf-card-body">{{summary}}</div>{{/if}}
+      </div>
+      <span class="tf-beat-actions">
+        <button type="button" class="tf-icon" data-action="beatUp" data-id="{{id}}" title="Move up"><i class="fas fa-arrow-up"></i></button>
+        <button type="button" class="tf-icon" data-action="beatDown" data-id="{{id}}" title="Move down"><i class="fas fa-arrow-down"></i></button>
+        <button type="button" class="tf-icon" data-action="beatGap" data-index="{{globalIndex}}" title="Fill the gap after this beat"><i class="fas fa-diagram-predecessor"></i></button>
+        <button type="button" class="tf-icon" data-action="beatDelete" data-id="{{id}}" title="Delete beat"><i class="fas fa-trash"></i></button>
+      </span>
+    </div>
+    {{/each}}
+    {{else}}
+    <p class="tf-empty">No beats yet. Add the first one below, or let Suggest next beats draft some.</p>
+    {{/each}}
+
+    <h3>Add a beat</h3>
+    <div class="tf-grid2">
+      <label>Title<input id="tf-beat-title" type="text"></label>
+      <label>Act<input id="tf-beat-act" type="text" placeholder="e.g. Act I"></label>
+    </div>
+    <label>Summary<textarea id="tf-beat-summary" rows="2"></textarea></label>
+    <button type="button" class="tf-btn" data-action="beatAdd">Add beat</button>
+  </section>
+  {{/if}}
+
+  {{#if is_ideas}}
+  <section class="tf-pane">
+    <div class="tf-row">
+      <label class="tf-grow">Search<input type="text" data-idea-filter="search" value="{{filter.search}}" placeholder="Search the bank…"></label>
+      <label>Type
+        <select data-idea-filter="type">
+          {{#each typeOptions}}<option value="{{k}}" {{#if sel}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+      </label>
+      <label class="tf-check"><input type="checkbox" data-idea-filter="favOnly" {{#if filter.favOnly}}checked{{/if}}> ★ only</label>
+      <label class="tf-check"><input type="checkbox" data-idea-filter="unusedOnly" {{#if filter.unusedOnly}}checked{{/if}}> Unused only</label>
+      <span class="tf-dim">Showing {{shown}} of {{total}}</span>
+    </div>
+
+    <details class="tf-details">
+      <summary>Add an idea of your own</summary>
+      <div class="tf-grid2">
+        <label>Type
+          <select id="tf-idea-type">{{#each addTypeOptions}}<option value="{{k}}">{{label}}</option>{{/each}}</select>
+        </label>
+        <label>Title<input id="tf-idea-title" type="text"></label>
+      </div>
+      <label>Body<textarea id="tf-idea-body" rows="3"></textarea></label>
+      <label>Tags (comma-separated)<input id="tf-idea-tags" type="text"></label>
+      <button type="button" class="tf-btn" data-action="ideaAdd">Add to bank</button>
+    </details>
+
+    {{#each ideas}}
+    <article class="tf-card {{#if used}}used{{/if}}">
+      <header>
+        <h3>{{title}} <span class="tf-dim">{{typeLabel}}</span></h3>
+        <span class="tf-card-actions">
+          <button type="button" class="tf-icon {{#if favorite}}on{{/if}}" data-action="ideaFav" data-id="{{id}}" title="Favorite"><i class="fas fa-star"></i></button>
+          <button type="button" class="tf-icon" data-action="ideaDelete" data-id="{{id}}" title="Delete"><i class="fas fa-trash"></i></button>
+        </span>
+      </header>
+      <div class="tf-card-body">{{body}}</div>
+      {{#if tagList}}<div class="tf-tags">{{#each tagList}}<span class="tf-pill">#{{this}}</span>{{/each}}</div>{{/if}}
+      <footer class="tf-row tf-wrap">
+        <button type="button" class="tf-btn sm" data-action="ideaUsed" data-id="{{id}}">{{#if used}}Mark unused{{else}}Mark used{{/if}}</button>
+        <button type="button" class="tf-btn sm" data-action="ideaToBeat" data-id="{{id}}">To outline</button>
+        <button type="button" class="tf-btn sm" data-action="ideaToConcept" data-id="{{id}}">To concepts</button>
+        <button type="button" class="tf-btn sm" data-action="ideaToLoot" data-id="{{id}}">To stash</button>
+        <button type="button" class="tf-btn sm" data-action="ideaToJournal" data-id="{{id}}">To journal</button>
+      </footer>
+    </article>
+    {{else}}
+    <p class="tf-empty">The bank is empty. Saved Forge cards land here automatically — or add your own above.</p>
+    {{/each}}
+  </section>
+  {{/if}}
+
+  {{#if is_concepts}}
+  <section class="tf-pane">
+    <p class="tf-dim">Drag nodes to arrange them. Double-click empty space to drop a new node. Click a node to edit it.</p>
+    <div class="tf-board">{{{svg}}}</div>
+    <div class="tf-grid2">
+      <label>Label<input id="tf-node-label" type="text" value="{{selNode.label}}"></label>
+      <label>Kind<input id="tf-node-kind" type="text" value="{{selNode.kind}}" placeholder="faction, person, place…"></label>
+    </div>
+    <label>Note<textarea id="tf-node-note" rows="2">{{selNode.note}}</textarea></label>
+    <div class="tf-row">
+      <button type="button" class="tf-btn" data-action="nodeAdd">Add node</button>
+      {{#if selNode}}
+      <button type="button" class="tf-btn primary" data-action="nodeSave">Save “{{selNode.label}}”</button>
+      <button type="button" class="tf-btn danger" data-action="nodeDelete">Delete node</button>
+      {{/if}}
+    </div>
+    <h3>Links</h3>
+    <div class="tf-row">
+      <select id="tf-edge-from">{{#each nodes}}<option value="{{id}}">{{label}}</option>{{/each}}</select>
+      <input id="tf-edge-label" type="text" placeholder="secretly funds, rivals…">
+      <select id="tf-edge-to">{{#each nodes}}<option value="{{id}}">{{label}}</option>{{/each}}</select>
+      <button type="button" class="tf-btn" data-action="edgeAdd" {{#unless hasNodes}}disabled{{/unless}}>Link</button>
+    </div>
+    <ul class="tf-log">
+      {{#each edges}}<li>{{fromLabel}} — <em>{{label}}</em> → {{toLabel}} <button type="button" class="tf-icon" data-action="edgeDelete" data-id="{{id}}"><i class="fas fa-trash"></i></button></li>{{/each}}
+    </ul>
+  </section>
+  {{/if}}
+
+  {{#if is_maps}}
+  <section class="tf-pane">
+    <div class="tf-split">
+      <aside class="tf-side">
+        <h3>Your maps</h3>
+        {{#each maps}}
+        <button type="button" class="tf-list-item {{#if active}}active{{/if}}" data-action="mapSelect" data-id="{{id}}">{{name}} <span class="tf-dim">{{dims}}</span></button>
+        {{else}}
+        <p class="tf-dim">No maps yet.</p>
+        {{/each}}
+        <h3>New map</h3>
+        <label>Name<input id="tf-map-name" type="text" placeholder="e.g. The Sunken Chapel"></label>
+        <div class="tf-grid2">
+          <label>Columns<input id="tf-map-cols" type="number" min="4" max="40" value="16"></label>
+          <label>Rows<input id="tf-map-rows" type="number" min="4" max="40" value="12"></label>
+        </div>
+        <label>Base terrain
+          <select id="tf-map-base">{{#each baseTerrains}}<option value="{{code}}">{{label}}</option>{{/each}}</select>
+        </label>
+        <label>Feet per square<input id="tf-map-feet" type="number" min="1" max="50" value="5"></label>
+        <button type="button" class="tf-btn primary" data-action="mapNew">Create map</button>
+      </aside>
+
+      <div class="tf-main">
+        {{#if map}}
+        <div class="tf-board">{{{map.svg}}}</div>
+        <div class="tf-row tf-wrap">
+          <button type="button" class="tf-chip sm {{#unless map.painting}}on{{/unless}}" data-action="mapPaint" data-code="select">Select / move</button>
+          {{#each map.palette}}
+          <button type="button" class="tf-chip sm {{#if active}}on{{/if}}" data-action="mapPaint" data-code="{{code}}" title="{{label}}"><span class="tf-swatch" style="background:{{color}}"></span>{{label}}</button>
+          {{/each}}
+        </div>
+        <p class="tf-dim">Selection: {{map.selLabel}}. Drag to select, drag a feature to move it, or pick a terrain and paint.</p>
+        <div class="tf-row">
+          <label class="tf-grow">Ask for a change
+            <input id="tf-map-request" type="text" placeholder="“Add a lighthouse that takes up 4 squares” · “Make this water”">
+          </label>
+          <button type="button" class="tf-btn primary" data-action="mapRequest">Apply</button>
+          {{#if map.canUndo}}<button type="button" class="tf-btn" data-action="mapUndo">Undo</button>{{/if}}
+        </div>
+        {{#if map.selFeature}}
+        <div class="tf-feature-card">
+          <strong>{{map.selFeature.icon}} {{map.selFeature.name}}</strong> <span class="tf-dim">{{map.selFeature.atLabel}}</span>
+          {{#if map.selFeature.description}}<div class="tf-card-body">{{map.selFeature.description}}</div>{{/if}}
+          <button type="button" class="tf-btn sm danger" data-action="featureDelete" data-id="{{map.selFeature.id}}">Remove feature</button>
+        </div>
+        {{/if}}
+        <details class="tf-details">
+          <summary>All features ({{map.features.length}})</summary>
+          <ul class="tf-log">
+            {{#each map.features}}<li>{{icon}} <strong>{{name}}</strong> <span class="tf-dim">{{atLabel}}</span> <button type="button" class="tf-icon" data-action="featureDelete" data-id="{{id}}"><i class="fas fa-trash"></i></button></li>{{/each}}
+          </ul>
+        </details>
+        <div class="tf-grid2">
+          <label>Map name<input id="tf-map-edit-name" type="text" value="{{map.name}}"></label>
+          <label>Read-aloud / GM notes<textarea id="tf-map-notes" rows="3">{{map.notes}}</textarea></label>
+        </div>
+        <div class="tf-row">
+          <button type="button" class="tf-btn" data-action="mapNotesSave">Save map</button>
+          <button type="button" class="tf-btn primary" data-action="mapExportScene">Export as Scene + journal</button>
+          <button type="button" class="tf-btn danger" data-action="mapDelete">Delete map</button>
+        </div>
+        {{else}}
+        <p class="tf-empty">Create a map to start sketching. Export turns it into a real Foundry Scene (grid-aligned background image) with its notes as a journal.</p>
+        {{/if}}
+      </div>
+    </div>
+  </section>
+  {{/if}}
+
+  {{#if is_loot}}
+  <section class="tf-pane">
+    {{#unless hasStash}}
+    <div class="tf-row">
+      <p class="tf-grow">No party stash yet. Create one — a GM-only actor that holds shared loot.</p>
+      <button type="button" class="tf-btn primary" data-action="stashCreate">Create party stash</button>
+    </div>
+    {{/unless}}
+    {{#if isEmpty}}
+    <p class="tf-empty">No actors found in this world yet.</p>
+    {{/if}}
+    {{#each holders}}
+    <div class="tf-holder">
+      <h3>{{name}}{{#if isStash}} <span class="tf-pill">Party stash</span>{{/if}} <span class="tf-dim">Attuned {{attunedCount}}/3</span></h3>
+      {{#each items}}
+      <div class="tf-loot-row" data-loot-item>
+        <span class="tf-grow"><strong>{{name}}</strong> {{#if rarity}}<span style="{{rarityStyle}}">{{rarity}}</span>{{/if}}{{#if charges}} <span class="tf-dim">· {{charges}}</span>{{/if}}</span>
+        {{#if requiresAttunement}}
+        <button type="button" class="tf-btn sm {{#if attuned}}on{{/if}}" data-action="itemAttune" data-actor="{{actorId}}" data-id="{{id}}">{{#if attuned}}Attuned ✓{{else}}Attune{{/if}}</button>
+        {{/if}}
+        <select>{{#each ../../moveTargets}}<option value="{{actorId}}">{{name}}</option>{{/each}}</select>
+        <button type="button" class="tf-btn sm" data-action="itemMove" data-actor="{{actorId}}" data-id="{{id}}">Move</button>
+      </div>
+      {{else}}
+      <p class="tf-dim">Nothing carried.</p>
+      {{/each}}
+    </div>
+    {{/each}}
+    <p class="tf-dim">Attunement is tracked with TableForge item flags (dnd5e attunement fields are honored when present). Moves copy the item to the destination actor and remove it from the source.</p>
+  </section>
+  {{/if}}
+  </div>
+</div>
